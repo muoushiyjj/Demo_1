@@ -22,8 +22,14 @@ public class UnitStats : MonoBehaviour
     public bool hasDamaged;
     public bool oneActCompelet;
 
+    private Rigidbody2D rb;
+    private float velocity;
 
 
+    private void WalkToMonster()
+    {
+
+    }
     public void Damage()
     {
         GameObject.Find("BattleManager").GetComponent<BattleManage>().attackedUnit.GetComponent<UnitStats>().HP -= damage;
@@ -37,43 +43,27 @@ public class UnitStats : MonoBehaviour
     {
 
         damage = 20;
-        
-        if (transform.tag == "Monster")
-        {
-            
-            if (!oneActCompelet)//如果一次行动没有完成，造成伤害
-            {
-                Damage();
-            }
-            StartCoroutine(Main.DelayFuc(SetHasActed, 3f));
-        }
-        else
-        {
-            SetHasActed();
-        }
-        if (hasActed == true)
+        Damage();
+
+
+
+        SetHasActed();//行动完成
+        damage = 0;
+    }
+    public void Attack2()
+    {
+
+    }
+
+    public void MonsterAttack()
+    {
+        damage = 10;
+        if (!oneActCompelet)
         {
             Damage();
         }
         damage = 0;
-
-
-    }
-
-    public void Attack2()
-    {
-        
-        damage = 50;
-        print(transform.name + "hasattack");
-        if (transform.tag == "Monster")
-        {
-            StartCoroutine(Main.DelayFuc(SetHasActed, 3f));//如果是怪物就延迟设置hasActed
-        }
-        else
-        {
-            SetHasActed();
-        }
-
+        StartCoroutine(Main.DelayFuc(SetHasActed, 3f));//延迟设置行动完成
     }
 
     void Start()

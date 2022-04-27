@@ -69,7 +69,7 @@ public class ShowBar : MonoBehaviour
     private void Awake()
     {
         index = 0;
-        SpawnAllBar();
+        //SpawnAllBar();
         herosCout = this.GetComponent<BattleSpawner>().herosCount;
         monstersCount =this.GetComponent<BattleSpawner>().monstersCount;
         herosList = GetComponent<BattleSpawner>().herosList;
@@ -78,6 +78,7 @@ public class ShowBar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SpawnAllBar();
         SetUIPositionWithUnit();
     }
 

@@ -1,19 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleManage : MonoBehaviour
 {
+
     private GameObject[] heros;//所有英雄的集合
     private GameObject[] monsters;//所有怪物的集合
     private List<GameObject> hero = new List<GameObject>();
     private List<GameObject> monster = new List<GameObject>();
     private List<GameObject> team;//当前操作的队伍
     private GameObject currentUnit;
+    
     public  GameObject attackedUnit;
 
+    public GameObject choseMonsterCanvas;
+    private bool hasChosedMonster;
 
-
+    private delegate void AttackFunction();
+    AttackFunction attackFunction;
 
 
 
@@ -37,6 +43,8 @@ public class BattleManage : MonoBehaviour
             monster.Sort(new CompareUnitsSpeed());//实现了按unitstats.speed排列数组
         }
         team = hero;//玩家先行动
+        
+        
         
     }
 
@@ -74,11 +82,12 @@ public class BattleManage : MonoBehaviour
                     if (team == hero)//切换队伍
                     {
                         StartCoroutine(Main.DelayFuc(ChangeToMonster, 3f));
-                        GetComponent<UIManager>().menuShow = false;//玩家攻击完关闭ui
+                        
                     }
                     else if (team == monster)//切换队伍
                     {
                         ChangeToHero();
+                        GetComponent<UIManager>().menuShow = true;//怪物攻击完打开ui
                     }
 
                 }
@@ -86,7 +95,10 @@ public class BattleManage : MonoBehaviour
         }
        
     }//改变队伍的方法
-
+    private void SetUIMenu()//关闭行动菜单的方法
+    {
+        GetComponent<UIManager>().menuShow = false;
+    }
     void ChangeToMonster()
     {
         team = monster;
@@ -102,7 +114,7 @@ public class BattleManage : MonoBehaviour
     {
         if (team == monster)//如果是怪物操作就自动攻击
         {
-            Attack1();
+            MonsterAttack();
             
         }
     }
@@ -121,25 +133,35 @@ public class BattleManage : MonoBehaviour
     }
     void Update()
     {
-        if (team == hero)
-        {
-            attackedUnit = monster[0];
-        }
-        else if (team == monster)
+        if (team == monster)
         {
             attackedUnit = hero[0];
         }
         currentUnit = team[index];
         team.Sort(new CompareUnitsSpeed());//实现了按unitstats.speed排列数组
-        print(currentUnit.GetComponent<UnitStats>().hasActed);
+        //print(currentUnit.GetComponent<UnitStats>().hasActed);
 
+    }
+
+    public void ChoseMonster(int index)//设置被攻击对象,并攻击
+    {
+        print(index+"点击成功");
+        attackedUnit = monster[index];
+        hasChosedMonster = true;
+        if (hasChosedMonster)
+        {
+            attackFunction();//攻击委托
+        }
+        hasChosedMonster = false;
+        choseMonsterCanvas.SetActive(false);//关闭选择画布
     }
 
 
     public void Attack1()
     {
-       
-        currentUnit.GetComponent<UnitStats>().Attack1();
+        choseMonsterCanvas.SetActive(true);//打开选择画布
+        attackFunction =currentUnit.GetComponent<UnitStats>().Attack1;//设置攻击委托
+        SetUIMenu();
         
 
     }
@@ -149,6 +171,11 @@ public class BattleManage : MonoBehaviour
         currentUnit.GetComponent<UnitStats>().Attack2();
         
 
+    }
+
+    private void MonsterAttack()
+    {
+        currentUnit.GetComponent<UnitStats>().MonsterAttack();
     }
 
 }

@@ -4604,6 +4604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackedUnit: {fileID: 0}
+  choseMonsterCanvas: {fileID: 1981479799}
 --- !u!4 &1609376680
 Transform:
   m_ObjectHideFlags: 0
