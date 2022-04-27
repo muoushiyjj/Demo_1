@@ -60,7 +60,7 @@ public class ChoseMonster : MonoBehaviour
         {
             choseMonsterButtonsList[index].transform.position = monstersList[index].transform.position + new Vector3(xoffset, yoffset, 0);
             index++;
-            print("位置设置成功");
+            
         }
         index = 0;
     }

@@ -44,8 +44,6 @@ public class BattleManage : MonoBehaviour
         }
         team = hero;//玩家先行动
         
-        
-        
     }
 
     private void Awake()
@@ -145,7 +143,7 @@ public class BattleManage : MonoBehaviour
 
     public void ChoseMonster(int index)//设置被攻击对象,并攻击
     {
-        print(index+"点击成功");
+        
         attackedUnit = monster[index];
         hasChosedMonster = true;
         if (hasChosedMonster)
