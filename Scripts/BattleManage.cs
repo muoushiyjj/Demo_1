@@ -8,8 +8,8 @@ public class BattleManage : MonoBehaviour
 
     private GameObject[] heros;//所有英雄的集合
     private GameObject[] monsters;//所有怪物的集合
-    private List<GameObject> hero = new List<GameObject>();
-    private List<GameObject> monster = new List<GameObject>();
+    public List<GameObject> hero = new List<GameObject>();
+    public List<GameObject> monster = new List<GameObject>();
     private List<GameObject> team;//当前操作的队伍
     private GameObject currentUnit;
     
@@ -20,6 +20,8 @@ public class BattleManage : MonoBehaviour
 
     private delegate void AttackFunction();
     AttackFunction attackFunction;
+
+    public bool monsterNeedAim;
 
 
 
@@ -57,10 +59,16 @@ public class BattleManage : MonoBehaviour
         {
             if (team[index].GetComponent<UnitStats>().hasActed)//如果当前的单位行动完，执行下面
             {
+                monsterNeedAim = true;//一个怪物攻击完再选新的敌人
+                
 
                 if (index < team.Count - 1)
                 {
                     index += 1;
+                    if (team == hero)
+                    {
+                        GetComponent<UIManager>().menuShow = true;//一个hero行动后如果还有hero没行动就打开菜单
+                    }
 
                 }
                 else if (index == team.Count - 1)
@@ -79,7 +87,8 @@ public class BattleManage : MonoBehaviour
                     }
                     if (team == hero)//切换队伍
                     {
-                        StartCoroutine(Main.DelayFuc(ChangeToMonster, 3f));
+                        StartCoroutine(Main.DelayFuc(ChangeToMonster, 3f));//hero行动完
+                        monsterNeedAim = true;
                         
                     }
                     else if (team == monster)//切换队伍
@@ -108,10 +117,58 @@ public class BattleManage : MonoBehaviour
         GetComponent<UIManager>().menuShow = true;//怪物行动完就打开ui
     }
    
+    void SomeUnitDead()
+    {
+        foreach(GameObject obj in heros)
+        {
+            if (obj.GetComponent<UnitStats>().isDead)
+            {
+                
+                int i = hero.IndexOf(obj);//把单位在表中的索引记录下来
+                hero.Remove(obj);
+                int tempCount = GetComponent<ShowBar>().heroBars.Count / 2;
+                Slider tempHP = GetComponent<ShowBar>().heroBars[i];
+                Slider tempMP = GetComponent<ShowBar>().heroBars[tempCount + i];
+
+                GetComponent<ShowBar>().heroBars.RemoveAt(tempCount + i);
+                GetComponent<ShowBar>().heroBars.RemoveAt(i);
+
+                Destroy(tempHP);
+                Destroy(tempMP);
+                Destroy(obj);
+            }
+        }
+        foreach(GameObject obj in monsters)
+        {
+            if (obj.GetComponent<UnitStats>().isDead)
+            {
+                int i = monster.IndexOf(obj);
+                monster.Remove(obj);
+                Slider tempHP = GetComponent<ShowBar>().monsterBars[i];
+                Button tempButton = GetComponent<ChoseMonster>().choseMonsterButtonsList[i];
+
+                GetComponent<ShowBar>().monsterBars.RemoveAt(i);
+
+                GetComponent<ChoseMonster>().choseMonsterButtonsList.RemoveAt(i);
+                foreach(Button b in GetComponent<ChoseMonster>().choseMonsterButtonsList)
+                {
+                    b.onClick.RemoveAllListeners();//删掉所有的点击事件
+                }
+                GetComponent<ChoseMonster>().SetChoseButtonOnClick();//重新设置点击事件
+
+
+                Destroy(tempHP);
+                Destroy(tempButton);
+                Destroy(obj);
+
+            }
+        }
+    }
     private void MonsterAutoAct()
     {
         if (team == monster)//如果是怪物操作就自动攻击
         {
+
             MonsterAttack();
             
         }
@@ -126,18 +183,31 @@ public class BattleManage : MonoBehaviour
             MonsterAutoAct();
             currentUnit.GetComponent<UnitStats>().oneActCompelet = true;
         }
+        
+        
 
 
     }
     void Update()
     {
-        if (team == monster)
+        if (team == monster&&monsterNeedAim)//要不然会一直选，攻击的和伤害到的不是同一个人
         {
-            attackedUnit = hero[0];
+            int index = (int)Mathf.Floor(Random.Range(0f, hero.Count));
+            attackedUnit = hero[index];
+            monsterNeedAim = false;
         }
         currentUnit = team[index];
         team.Sort(new CompareUnitsSpeed());//实现了按unitstats.speed排列数组
         //print(currentUnit.GetComponent<UnitStats>().hasActed);
+
+        heros = GameObject.FindGameObjectsWithTag("Hero");//更新heros
+        monsters = GameObject.FindGameObjectsWithTag("Monster");//更新monsters
+
+        SomeUnitDead();
+
+
+
+
 
     }
 

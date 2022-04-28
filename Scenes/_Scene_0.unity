@@ -7228,15 +7228,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1321952601, guid: 155e7c9509df9764ebd74a8007e6380e, type: 3}
       propertyPath: heroCount
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1321952601, guid: 155e7c9509df9764ebd74a8007e6380e, type: 3}
       propertyPath: heroName2
-      value: 
+      value: Hero_1
       objectReference: {fileID: 0}
     - target: {fileID: 1321952601, guid: 155e7c9509df9764ebd74a8007e6380e, type: 3}
       propertyPath: heroName3
-      value: 
+      value: Hero_1
       objectReference: {fileID: 0}
     - target: {fileID: 6644976731574261772, guid: 155e7c9509df9764ebd74a8007e6380e, type: 3}
       propertyPath: m_RootOrder

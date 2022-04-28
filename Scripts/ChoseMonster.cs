@@ -13,7 +13,7 @@ public class ChoseMonster : MonoBehaviour
 
     private Button tempButton;
     private List<GameObject> monstersList = new List<GameObject>();
-    private List<Button> choseMonsterButtonsList = new List<Button>();
+    public  List<Button> choseMonsterButtonsList = new List<Button>();
     // Start is called before the first frame update
 
     private int hasSpawnedButtonsCount=1;
@@ -34,13 +34,14 @@ public class ChoseMonster : MonoBehaviour
         
     }
 
-    private void SetChoseButtonOnClick()
+    public void SetChoseButtonOnClick()
     {
         while(index <= choseMonsterButtonsList.Count-1)
         {
             int tempindex=index;
             choseMonsterButtonsList[index].onClick.AddListener(() => { GetComponent<BattleManage>().ChoseMonster(tempindex); });//把index通过点击事件传给battlemanage
             index++;
+            
         }
         index = 0;
     }
@@ -68,7 +69,7 @@ public class ChoseMonster : MonoBehaviour
     {
         SpawnAllButtom();
         SetButtonPositionWithMonster();
-        SetChoseButtonOnClick();
+        SetChoseButtonOnClick();//需要更新
         ChoseCanvas.SetActive(false);
 
     }
@@ -76,6 +77,6 @@ public class ChoseMonster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
     }
 }

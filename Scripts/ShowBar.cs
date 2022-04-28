@@ -15,8 +15,8 @@ public class ShowBar : MonoBehaviour
 
     private Slider tempBar;
 
-    private List<Slider> heroBars=new List<Slider>();
-    private List<Slider> monsterBars = new List<Slider>();
+    public  List<Slider> heroBars=new List<Slider>();
+    public  List<Slider> monsterBars = new List<Slider>();
     private List<GameObject> herosList = new List<GameObject>();
     private List<GameObject> monstersList = new List<GameObject>();
 
@@ -49,27 +49,27 @@ public class ShowBar : MonoBehaviour
 
     void SetSliderValueWithUnit()
     {
-        while (index <= herosCout - 1)//设置hero的bar
+        
+        while (index <= (heroBars.Count/2-1))//设置hero的bar
         {
+           
             heroBars[index].value = herosList[index].GetComponent<UnitStats>().HPValue;
-            heroBars[herosCout + index].value = herosList[index].GetComponent<UnitStats>().MPValue;
+            heroBars[(heroBars.Count/2) + index].value = herosList[index].GetComponent<UnitStats>().MPValue;
             index++;
-            
-            
         }
         index = 0;
-        while (index <= monstersCount - 1)//设置monster的bar
+        while (index <= monsterBars.Count - 1)//设置monster的bar
         {
             monsterBars[index].value = monstersList[index].GetComponent<UnitStats>().HPValue;
             index++;
         }
+          
         index = 0;
     }
 
     private void Awake()
     {
         index = 0;
-        //SpawnAllBar();
         herosCout = this.GetComponent<BattleSpawner>().herosCount;
         monstersCount =this.GetComponent<BattleSpawner>().monstersCount;
         herosList = GetComponent<BattleSpawner>().herosList;
@@ -91,8 +91,10 @@ public class ShowBar : MonoBehaviour
     void Update()
     {
         //print(Bars.Count);
+        herosList = GetComponent<BattleManage>().hero;//更新两个表，以battlemanage为准
+        monstersList = GetComponent<BattleManage>().monster;
         
-        
+
     }
 
     private void SpawnAllBar()

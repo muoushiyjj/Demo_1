@@ -136,16 +136,14 @@ public class BattleSpawner : MonoBehaviour
     void Start()
     {
         
-        heros = GameObject.FindGameObjectsWithTag("Hero");//初始化两个数组
-        monsters = GameObject.FindGameObjectsWithTag("Monster");
+        //heros = GameObject.FindGameObjectsWithTag("Hero");//初始化两个数组
+        //monsters = GameObject.FindGameObjectsWithTag("Monster");
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        //herosList[0].GetComponent<UnitStats>().HP--;
-        //print(herosList[0].GetComponent<UnitStats>().HP);
-        
+
     }
 }
